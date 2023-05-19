@@ -16,7 +16,7 @@ class AntiSpam(Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             await message.delete()
-            await message.channel.send(f"{message.author.mention}, don't spam!", delete_after = 10)
+            await message.channel.send(f"{message.author.mention}, Please don't spam!", delete_after = 10)
             violations = self.too_many_violations.get_bucket(message)
             check = violations.update_rate_limit()
             if check:

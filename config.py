@@ -8,7 +8,7 @@ EXTENSIONS = [
 
 OPENAI_TOKEN = "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"
 
-DISCORD_TOKEN = "MTEwNjQ3NjM5NTg2NzE1NjU4MQ.GiEhY8.XrMambYXWKT2StZR3Lc85G-fDfUu82vBqXCUE8"
+DISCORD_TOKEN = "https://discord.com/developer/applications"
 
 COLOR = 0x2f3136
 

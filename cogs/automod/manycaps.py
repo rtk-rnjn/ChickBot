@@ -18,6 +18,6 @@ class TooManyCaps(Cog):
         else:
             cap_percentage = caps_count / message_length
             if cap_percentage > max_cap_percentage:
-                warning_message = f"{message.author.mention}, please avoid excessive use of capital letters."
+                warning_message = f"{message.author.mention}, Please avoid excessive use of capital letters."
                 await message.delete()
                 await message.channel.send(warning_message, delete_after = 5)
