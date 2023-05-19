@@ -51,6 +51,7 @@ class ChickBot(commands.Bot):
             self.Logger.info(f'Loaded extension {ext}')
 
     async def setup_hook(self):
+        await self.wait_until_ready()
         await self.tree.sync()
         self.session = aiohttp.ClientSession()
 

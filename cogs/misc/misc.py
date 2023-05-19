@@ -1,4 +1,4 @@
-import discord
+import discord, asyncio
 from discord.ext import commands
 from typing_extensions import Annotated
 from typing import Optional
@@ -43,7 +43,8 @@ class Misc(Cog):
         except:
             await ctx.send("404 not found ! Try again later.")
 
-    @commands.hybrid_command()
+    @commands.hybrid_command(name="chick", description="Get a random fact about chicken")
     async def chick(self, ctx):
         fact = get_chick_fact()
+        await asyncio.sleep(10)
         await ctx.send(fact)
