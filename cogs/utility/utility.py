@@ -5,7 +5,6 @@ from typing import Optional, Union
 from discord.ext import commands
 from core import Chick
 
-
 class Utility(Cog):
     def __init__(self, bot: Chick):
         self.bot = bot
@@ -20,5 +19,3 @@ class Utility(Cog):
         await ctx.send(f"Purging {limit} messages.", delete_after=15)
         purged = await ctx.channel.purge(limit=limit)
         await ctx.channel.send(f"Purged {len(purged)} messages.", delete_after=15)
-
-    

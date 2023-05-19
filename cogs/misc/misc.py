@@ -3,7 +3,7 @@ from discord.ext import commands
 from typing_extensions import Annotated
 from typing import Optional
 from core.Cog import Cog
-from .utils import translate, askgpt
+from .utils import translate, askgpt, get_chick_fact
 
 from core import Chick
 
@@ -42,3 +42,8 @@ class Misc(Cog):
             await ctx.send(embed=embed)
         except:
             await ctx.send("404 not found ! Try again later.")
+
+    @commands.hybrid_command()
+    async def chick(self, ctx):
+        fact = get_chick_fact()
+        await ctx.send(fact)
