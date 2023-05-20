@@ -20,4 +20,4 @@ PREFIX = "c."
 
 SERVER_LINK = "https://discord.gg/jnwxpcFhrA"
 
-BOT_INVITE = "https://discord.com/api/"
+BOT_INVITE = "https://discord.com/api/oauth2/authorize?client_id=1073278821496782858&permissions=10430261488759&scope=applications.commands%20bot"
