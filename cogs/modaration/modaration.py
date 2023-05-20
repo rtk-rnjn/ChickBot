@@ -16,6 +16,7 @@ class Moderation(Cog):
         """
         Purges messages from the channel
 		"""
+        await ctx.defer(ephemeral=False)
         await ctx.send(f"Purging {limit} messages.", delete_after=15)
         purged = await ctx.channel.purge(limit=limit)
         await ctx.channel.send(f"Purged {len(purged)} messages.", delete_after=15)

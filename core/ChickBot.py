@@ -20,10 +20,10 @@ class ChickBot(commands.Bot):
             intents=discord.Intents.all(), 
             activity=discord.Activity(
                 type=discord.ActivityType.competing, 
-                name="c.help | Chick OP"),
+                name="c.help"),
             **kwargs
             )
-        
+
     @property
     def Logger(self):
         return Logger
