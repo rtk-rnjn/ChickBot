@@ -3,7 +3,8 @@ EXTENSIONS = [
     "cogs.utility",
     "cogs.developer",
     "cogs.info",
-    "cogs.automod"
+    "cogs.automod",
+    "cogs.modaration"
     ]
 
 OPENAI_TOKEN = "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"

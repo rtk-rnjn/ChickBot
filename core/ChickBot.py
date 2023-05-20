@@ -1,6 +1,7 @@
 import discord
 import logging
 import aiohttp
+import asyncio
 from discord.ext import commands
 from .Help import HelpCommand
 
@@ -45,14 +46,15 @@ class ChickBot(commands.Bot):
         )
 
     async def on_ready(self):
-        self.Logger.info(f'Logged in as {self.user}')
         for ext in self.config.EXTENSIONS:
             await self.load_extension(ext)
             self.Logger.info(f'Loaded extension {ext}')
-
-    async def setup_hook(self):
+        await asyncio.sleep(10)
         synced = await self.tree.sync()
         self.Logger.info(f"{len(synced)} Slash commands have been globally synchronized.")
+        self.Logger.info(f'Logged in as {self.user}')
+
+    async def setup_hook(self):
         self.session = aiohttp.ClientSession()
 
     async def on_command_error(self, ctx, error) -> None:

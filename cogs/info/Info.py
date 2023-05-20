@@ -42,7 +42,7 @@ class Info(Cog):
         embed.add_field(name="Latest Commit", value=f"[{get_latest_commit()['sha'][:7]}]({get_latest_commit()['html_url']})")
         embed.add_field(name="Commit Message", value=get_latest_commit()["commit"]["message"])
         embed.add_field(name="Commiter", value=f"[{get_latest_commit()['commit']['author']['name']}]({get_latest_commit()['author']['html_url']})")
-        embed.add_field(name="Commited at", value=datetime.datetime.strptime(time, date_format).strftime("%A , %B %Y , %I:%M %p"))
+        embed.add_field(name="Commited at", value=datetime.datetime.strptime(time, date_format).strftime("%A , %d-%m-%Y"))
         links = [
             LinkType("Support", config.SERVER_LINK),
             LinkType("Invite", self.bot.invite_url),

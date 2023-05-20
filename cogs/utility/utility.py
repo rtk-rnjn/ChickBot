@@ -1,60 +1,24 @@
+from __future__ import annotations
 import discord
 import asyncio
+import yarl
+import re
+import io
 from core import Cog
 from discord import app_commands
-from typing import Optional, Union
 from discord.ext import commands
 from .utils import Confirm
 from core import Chick
 
+from typing_extensions import Annotated
+from discord.ext import commands
+from discord import app_commands
+from typing import TYPE_CHECKING, Optional, Union
+from .utils import EmojiURL, partial_emoji, emoji_name
+
 class Utility(Cog):
     def __init__(self, bot: Chick):
         self.bot = bot
-
-    @commands.hybrid_command(name="purge", description="Purges messages from the channel")
-    @app_commands.describe(limit="The amount of messages that should be deleted.")
-    @commands.has_permissions(manage_messages=True)
-    async def purge(self, ctx, limit: Optional[int] = 10):
-        """
-        Purges messages from the channel
-		"""
-        await ctx.send(f"Purging {limit} messages.", delete_after=15)
-        purged = await ctx.channel.purge(limit=limit)
-        await ctx.channel.send(f"Purged {len(purged)} messages.", delete_after=15)
-
-    @commands.hybrid_command(name="kick", description="Kicks a member from the server")
-    @app_commands.describe(member="The member to kick.")
-    @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, member: discord.Member):
-        """
-        Kicks a member from the server
-        member: The member to kick. 
-        """
-        await member.kick(reason=reason)
-        await ctx.send(f"Kicked {member} .")
-
-
-    @commands.hybrid_command(name="ban", description="Bans a member from the server")       
-    @app_commands.describe(member="The member to ban.")
-    @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member):
-        """
-        Bans a member from the server
-        member: The member to ban. 
-        """
-        await member.ban(reason=reason)
-        await ctx.send(f"Banned {member}.")
-
-    @commands.hybrid_command(name="unban", description="Unbans a member from the server")
-    @app_commands.describe(member="The member to unban.")
-    @commands.has_permissions(ban_members=True)
-    async def unban(self, ctx, member: Union[discord.Member, discord.User]):
-        """
-        Unbans a member from the server
-        member: The member to unban. 
-        """
-        await member.unban(reason=reason)
-        await ctx.send(f"Unbanned {member}.")
 
     @commands.hybrid_command(name="lock", description="Locks down a channel")
     @app_commands.describe(channel="The channel to lock down.")
@@ -88,4 +52,54 @@ class Utility(Cog):
         """
         await ctx.send("Are you sure you want to nuke this channel?", view=Confirm(ctx), delete_after=60)
 
-    
+
+    @commands.hybrid_command(name='emoji', description='Creates a new emoji in the server using imoji url or file')
+    @commands.guild_only()
+    @app_commands.guild_only()
+    @app_commands.describe(
+        name='The emoji name',
+        file='The image file to use for uploading',
+        url='The URL to use for uploading',
+    )
+    async def emoji(self, ctx, name: Annotated[str, emoji_name], file: Optional[discord.Attachment], *, url: Optional[str]):
+        if not ctx.me.guild_permissions.manage_emojis:
+            return await ctx.send('Bot does not have permission to add emoji.')
+        reason = f'Action done by {ctx.author} (ID: {ctx.author.id})'
+        if file is None and url is None:
+            return await ctx.send('Missing emoji file or url to upload with')
+        if file is not None and url is not None:
+            return await ctx.send('Cannot mix both file and url arguments, choose only')
+        is_animated = False
+        request_url = ''
+        if url is not None:
+            upgraded = await EmojiURL.convert(ctx, url)
+            is_animated = upgraded.animated
+            request_url = upgraded.url
+        elif file is not None:
+            if not file.filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                return await ctx.send('Unsupported file type given, expected png, jpg, or gif')
+
+            is_animated = file.filename.endswith('.gif')
+            request_url = file.url
+
+        emoji_count = sum(e.animated == is_animated for e in ctx.guild.emojis)
+        if emoji_count >= ctx.guild.emoji_limit:
+            return await ctx.send('There are no more emoji slots in this server.')
+
+        async with self.bot.session.get(request_url) as resp:
+            if resp.status >= 400:
+                return await ctx.send('Could not fetch the image.')
+            if int(resp.headers['Content-Length']) >= (256 * 1024):
+                return await ctx.send('Image is too big.')
+
+            data = await resp.read()
+            coro = ctx.guild.create_custom_emoji(name=name, image=data, reason=reason)
+            async with ctx.typing():
+                try:
+                    created = await asyncio.wait_for(coro, timeout=10.0)
+                except asyncio.TimeoutError:
+                    return await ctx.send('Sorry, the bot is rate limited or it took too long.')
+                except discord.HTTPException as e:
+                    return await ctx.send(f'Failed to create emoji somehow: {e}')
+                else:
+                    return await ctx.send(f'Created {created}')
