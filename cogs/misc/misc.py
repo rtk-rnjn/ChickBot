@@ -45,6 +45,9 @@ class Misc(Cog):
 
     @commands.hybrid_command(name="chick", description="Get a random fact about chicken")
     async def chick(self, ctx):
-        fact = get_chick_fact()
-        await asyncio.sleep(10)
-        await ctx.send(fact)
+        try: 
+            fact = get_chick_fact()
+        except: 
+            fact = "chiken fact not found ! Try again later."
+        async with ctx.typing():
+            await ctx.send(fact)

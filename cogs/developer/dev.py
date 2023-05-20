@@ -1,4 +1,5 @@
 import discord
+from typing import Optional
 from discord.ext import commands
 from core import Chick, Cog
 
@@ -20,7 +21,7 @@ class Developer(Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def sync(self, ctx, scope: str) -> None:
+    async def sync(self, ctx, scope:Optional[str]) -> None:
         if scope == "global":
             await ctx.send("Synchronizing. It may take more then 30 sec", delete_after=5)
             synced=await ctx.bot.tree.sync()
@@ -36,7 +37,7 @@ class Developer(Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def unsync(self, ctx, scope: str) -> None:
+    async def unsync(self, ctx, scope:Optional[str]) -> None:
         if scope == "global":
             await ctx.send("Unsynchronizing...", delete_after=5)
             ctx.bot.tree.clear_commands(guild=None)

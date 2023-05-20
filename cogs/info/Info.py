@@ -1,7 +1,17 @@
 import discord
 import config
-from core import Cog, Chick, LinkButton, LinkType
+import asyncio
+import datetime
+from core import Cog, Chick, LinkButton, LinkType, truncate_string
 from discord.ext import commands
+from urllib.request import urlopen
+import json
+
+def get_latest_commit():
+    url = 'https://api.github.com/repos/himangshu147-git/ChickBot/commits?per_page=1'
+    response = urlopen(url).read()
+    data = json.loads(response.decode())
+    return data[0]
 
 class Info(Cog):
     def __init__(self, bot: Chick):
@@ -19,5 +29,23 @@ class Info(Cog):
         links = [
             LinkType("Support", config.SERVER_LINK),
             LinkType("Invite", self.bot.invite_url),
+        ]
+        await ctx.send(embed=embed, view=LinkButton(links))
+
+   
+    @commands.hybrid_command(name="chick_source", description="Shows the bot's source code", aliases=["source", "src"])
+    async def chick_source(self, ctx):
+        time=get_latest_commit()["commit"]["author"]["date"]
+        date_format = "%Y-%m-%dT%H:%M:%SZ"
+        embed=discord.Embed(title="Chick Bot", description="Chick is a discord bot written in Python using discord.py. It is a bot that is meant to be used for moderation, utility, and fun.", color=self.bot.color)
+        embed.set_thumbnail(url=self.bot.user.display_avatar.url)
+        embed.add_field(name="Latest Commit", value=f"[{get_latest_commit()['sha'][:7]}]({get_latest_commit()['html_url']})")
+        embed.add_field(name="Commit Message", value=get_latest_commit()["commit"]["message"])
+        embed.add_field(name="Commiter", value=f"[{get_latest_commit()['commit']['author']['name']}]({get_latest_commit()['author']['html_url']})")
+        embed.add_field(name="Commited at", value=datetime.datetime.strptime(time, date_format).strftime("%A , %B %Y , %I:%M %p"))
+        links = [
+            LinkType("Support", config.SERVER_LINK),
+            LinkType("Invite", self.bot.invite_url),
+            LinkType("Github", "https://github.com/himangshu147-git/ChickBot"),
         ]
         await ctx.send(embed=embed, view=LinkButton(links))

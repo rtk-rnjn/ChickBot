@@ -51,8 +51,8 @@ class ChickBot(commands.Bot):
             self.Logger.info(f'Loaded extension {ext}')
 
     async def setup_hook(self):
-        await self.wait_until_ready()
-        await self.tree.sync()
+        synced = await self.tree.sync()
+        self.Logger.info(f"{len(synced)} Slash commands have been globally synchronized.")
         self.session = aiohttp.ClientSession()
 
     async def on_command_error(self, ctx, error) -> None:
@@ -60,7 +60,22 @@ class ChickBot(commands.Bot):
             minutes, seconds = divmod(error.retry_after, 60)
             hours, minutes = divmod(minutes, 60)
             hours = hours % 24
-            
             await ctx.send(f"**Please slow down** - You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} {f'{round(minutes)} minutes' if round(minutes) > 0 else ''} {f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.", delete_after=5)
+        if isinstance(error, commands.CommandNotFound):
+            return  # Ignore command not found errors
+
+        # Handle other errors
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("You are missing a required argument.")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("One or more arguments are invalid.")
+        elif isinstance(error, commands.CheckFailure):
+            await ctx.send("You do not have permission to use this command.")
+        else:
+            # Print the error to the console for debugging purposes
+            print(f"An error occurred: {type(error).__name__} - {error}")
+            await ctx.send("An error occurred while executing the command.")
+
+
 
 Chick = ChickBot()
