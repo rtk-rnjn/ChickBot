@@ -33,8 +33,8 @@ class Info(Cog):
         await ctx.send(embed=embed, view=LinkButton(links))
 
    
-    @commands.hybrid_command(name="chick_source", description="Shows the bot's source code", aliases=["source", "src"])
-    async def chick_source(self, ctx):
+    @commands.hybrid_command(name="source", description="Shows the bot's source code", aliases=["src"])
+    async def source(self, ctx):
         time=get_latest_commit()["commit"]["author"]["date"]
         date_format = "%Y-%m-%dT%H:%M:%SZ"
         embed=discord.Embed(title="Chick Bot", description="Chick is a discord bot written in Python using discord.py. It is a bot that is meant to be used for moderation, utility, and fun.", color=self.bot.color)
