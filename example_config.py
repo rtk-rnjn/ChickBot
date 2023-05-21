@@ -1,3 +1,5 @@
+#rename this file to config.py
+
 EXTENSIONS = [
     "cogs.misc",
     "cogs.utility",
