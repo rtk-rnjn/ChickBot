@@ -1,8 +1,11 @@
-import discord
-import logging
-import aiohttp
 import asyncio
+import logging
+
+import aiohttp
+import discord
 from discord.ext import commands
+
+from .Butons import LinkButton, LinkType
 from .Help import HelpCommand
 
 Logger = logging.getLogger("discord.client")
@@ -20,7 +23,7 @@ class ChickBot(commands.Bot):
             intents=discord.Intents.all(), 
             activity=discord.Activity(
                 type=discord.ActivityType.competing, 
-                name="c.help"),
+                name="development"),
             **kwargs
             )
 
@@ -40,7 +43,7 @@ class ChickBot(commands.Bot):
     def invite_url(self) -> str:
         return discord.utils.oauth_url(
             self.user.id,
-            permissions=discord.Permissions(8),
+            permissions=discord.Permissions(10430261488759),
             scopes=("bot", "applications.commands"),
             disable_guild_select=False,
         )
@@ -64,9 +67,7 @@ class ChickBot(commands.Bot):
             hours = hours % 24
             await ctx.send(f"**Please slow down** - You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} {f'{round(minutes)} minutes' if round(minutes) > 0 else ''} {f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.", delete_after=5)
         if isinstance(error, commands.CommandNotFound):
-            return  # Ignore command not found errors
-
-        # Handle other errors
+            return  
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("You are missing a required argument.")
         elif isinstance(error, commands.BadArgument):
@@ -77,6 +78,17 @@ class ChickBot(commands.Bot):
             # Print the error to the console for debugging purposes
             print(f"An error occurred: {type(error).__name__} - {error}")
             await ctx.send("An error occurred while executing the command.")
+
+    async def on_message(self, message):
+        if self.user.mention in message.content:
+            embed = discord.Embed(title="Chick | a discord bot", description=f"Hi {message.author.mention}!\nMy prefix is `{self.config.PREFIX}`.\nUse `{self.config.PREFIX}help` to get started. \n`All commands are available as slash (/)`", color=self.color)
+            embed.set_thumbnail(url=self.user.display_avatar.url)
+            embed.set_footer(text=self.config.FOOTER, icon_url=self.user.display_avatar.url)
+            links = [
+                LinkType("Invite", self.invite_url),
+                LinkType("Support", self.config.SERVER_LINK)
+            ]
+            await message.channel.send(embed=embed, view=LinkButton(links))
 
 
 

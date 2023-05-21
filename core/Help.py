@@ -23,7 +23,7 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_bot_help(self, mapping: Mapping[Cog, List[commands.Command]]):
         ctx = self.context
-        hidden = ("HelpCog", "Developer")
+        hidden = ("Developer")
         embed = discord.Embed(color=self.color)
         embed.title = f"{ctx.bot.user.name} Help Menu"
         embed.description = f"Use `{ctx.prefix}help <command>` for more information about a command."
@@ -37,7 +37,7 @@ class HelpCommand(commands.HelpCommand):
 
         slash_cmds = await ctx.bot.tree.fetch_commands(guild=ctx.guild)
         slash_cmds = [f"{i.mention}" for i in slash_cmds]
-        embed.add_field(name=f"{ctx.bot.user.name} Slash Commands", value=", ".join(slash_cmds), inline=False)
+        embed.add_field(name=f"{ctx.bot.user.name} Slash Commands", value=", ".join(slash_cmds))
 
         links = [
             LinkType("Support", config.SERVER_LINK),

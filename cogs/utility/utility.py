@@ -1,20 +1,20 @@
 from __future__ import annotations
-import discord
-import asyncio
-import yarl
-import re
-import io
-from core import Cog
-from discord import app_commands
-from discord.ext import commands
-from .utils import Confirm
-from core import Chick
 
-from typing_extensions import Annotated
-from discord.ext import commands
-from discord import app_commands
+import asyncio
+import io
+import re
 from typing import TYPE_CHECKING, Optional, Union
-from .utils import EmojiURL, partial_emoji, emoji_name
+
+import discord
+import yarl
+from discord import app_commands
+from discord.ext import commands
+from typing_extensions import Annotated
+
+from core import Chick, Cog
+
+from .utils import Confirm, EmojiURL, emoji_name, partial_emoji
+
 
 class Utility(Cog):
     def __init__(self, bot: Chick):
