@@ -1,9 +1,13 @@
 import asyncio
 import logging
+import sys
+import traceback
 
 import aiohttp
 import discord
+import wavelink
 from discord.ext import commands
+from wavelink.ext import spotify
 
 from .Butons import LinkButton, LinkType
 from .Help import HelpCommand
@@ -59,6 +63,16 @@ class ChickBot(commands.Bot):
 
     async def setup_hook(self):
         self.session = aiohttp.ClientSession()
+        sc = spotify.SpotifyClient(
+            client_id=self.config.SPOTIFY_CLIENT_ID,
+            client_secret=self.config.SPOTIFY_CLIENT_SECRET,
+        )
+        node: wavelink.Node = wavelink.Node(uri='hatkidllus.gremagol.xyz:2334', password='easypass')
+        await wavelink.NodePool.connect(client=self, nodes=[node], spotify=sc)
+
+
+    async def on_wavelink_node_ready(self, node: wavelink.Node):
+        self.Logger.info(f"Successfully connected to {node.uri}")
 
     async def on_command_error(self, ctx, error) -> None:
         if isinstance(error, commands.CommandOnCooldown):
@@ -89,6 +103,8 @@ class ChickBot(commands.Bot):
                 LinkType("Support", self.config.SERVER_LINK)
             ]
             await message.channel.send(embed=embed, view=LinkButton(links))
+        else:
+            await self.process_commands(message)
 
 
 

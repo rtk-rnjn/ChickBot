@@ -1,11 +1,14 @@
-import discord, asyncio
+import asyncio
+from typing import TYPE_CHECKING, Optional
+
+import discord
 from discord.ext import commands
 from typing_extensions import Annotated
-from typing import Optional
-from core.Cog import Cog
-from .utils import translate, askgpt, get_chick_fact
 
-from core import Chick
+from core import Chick, Cog
+
+from .utils import askgpt, get_chick_fact, translate
+
 
 class Misc(Cog):
     def __init__(self, bot: Chick):

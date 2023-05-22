@@ -23,12 +23,12 @@ class Developer(Cog):
     @commands.is_owner()
     async def sync(self, ctx, scope:Optional[str]) -> None:
         if scope == "global":
-            await ctx.send("Synchronizing. It may take more then 30 sec", delete_after=5)
+            await ctx.send("Synchronizing. It may take more then 30 sec", delete_after=15)
             synced=await ctx.bot.tree.sync()
             await ctx.send(f"{len(synced)} Slash commands have been globally synchronized.")
             return
         elif scope == "guild":
-            await ctx.send("Synchronizing. It may take more then 30 sec", delete_after=5)
+            await ctx.send("Synchronizing. It may take more then 30 sec", delete_after=15)
             ctx.bot.tree.copy_global_to(guild=ctx.guild)
             synced = await ctx.bot.tree.sync(guild=ctx.guild)
             await ctx.send(f"{len(synced)} Slash commands have been synchronized in this guild.", delete_after=5)

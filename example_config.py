@@ -1,22 +1,25 @@
-#rename this file to config.py
-
 EXTENSIONS = [
     "cogs.misc",
     "cogs.utility",
     "cogs.developer",
     "cogs.info",
     "cogs.automod",
-    "cogs.modaration"
+    "cogs.modaration",
+    "cogs.welcome"
     ]
 
-OPENAI_TOKEN = "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"
+YOUTUBE="youtube v3 api key"
 
-DISCORD_TOKEN = "your bot token"
+SPOTIFY_CLIENT_ID=' '
+SPOTIFY_CLIENT_SECRET=' '
 
+OPENAI_TOKEN = "add your token here"
+
+DISCORD_TOKEN = "add your token here"
 
 COLOR = 0x2f3136
 
-FOOTER = "Chiku OP"
+FOOTER = "Chick OP"
 
 PREFIX = "c."
 
