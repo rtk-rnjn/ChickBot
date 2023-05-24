@@ -21,6 +21,17 @@ class Developer(Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
+    async def load(self, ctx, *, cog: str):
+        """Loads a cog"""
+        try:
+            await self.bot.load_extension("cogs."+cog)
+        except Exception as e:
+            await ctx.send(f'Failed to reload cog `{cog}`: `{e.__class__.__name__}`: `{e}`')
+        else:
+            await ctx.send(f'Loaded cog `{cog}`')
+
+    @commands.command(hidden=True)
+    @commands.is_owner()
     async def sync(self, ctx, scope:Optional[str]) -> None:
         if scope == "global":
             await ctx.send("Synchronizing. It may take more then 30 sec", delete_after=15)

@@ -50,7 +50,7 @@ class Utility(Cog):
         """
         Nukes the channel
         """
-        await ctx.send("Are you sure you want to nuke this channel?", view=Confirm(ctx), delete_after=30)
+        await ctx.send("Are you sure you want to nuke this channel?", view=Confirm(ctx))
 
     @commands.hybrid_command(name='emoji', description='Creates a new emoji in the server using imoji url or file')
     @commands.guild_only()

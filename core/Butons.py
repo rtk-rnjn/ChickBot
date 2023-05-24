@@ -11,6 +11,7 @@ class LinkType(NamedTuple):
 class LinkButton(discord.ui.View):
     def __init__(self, links: Union[LinkType, List[LinkType]]):
         super().__init__()
+    
 
         links = links if isinstance(links, list) else [links]
 

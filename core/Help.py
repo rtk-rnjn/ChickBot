@@ -7,6 +7,12 @@ from difflib import get_close_matches
 from typing import List, Mapping
 from .Butons import LinkButton, LinkType
 
+def truncate_string(value, max_length=128, suffix="..."):
+    string_value = str(value)
+    string_truncated = string_value[: min(len(string_value), (max_length - len(suffix)))]
+    suffix = suffix if len(string_value) > max_length else ""
+    return string_truncated + suffix
+
 
 class HelpCommand(commands.HelpCommand):
     def __init__(self) -> None:

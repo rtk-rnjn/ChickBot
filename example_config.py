@@ -8,7 +8,7 @@ EXTENSIONS = [
     "cogs.welcome"
     ]
 
-YOUTUBE="youtube v3 api key"
+YOUTUBE=' '
 
 SPOTIFY_CLIENT_ID=' '
 SPOTIFY_CLIENT_SECRET=' '

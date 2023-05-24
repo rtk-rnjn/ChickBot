@@ -2,21 +2,16 @@ from __future__ import annotations
 
 from contextlib import suppress
 from typing import Optional, TYPE_CHECKING
-
+import asyncio
 import config
 import discord
 
-if TYPE_CHECKING:
-    from .Context import Context
-
-__all__ = ("View", "Input")
-
+__all__ = ("View",)
 
 class View(discord.ui.View):
     message: discord.Message
     custom_id = None
-
-    def __init__(self, ctx: Context, *, timeout: Optional[float]=30):
+    def __init__(self, ctx: discord.ext.commands.Context, *, timeout: Optional[float]=60):
         super().__init__(timeout=timeout)
         self.ctx = ctx
         self.bot = ctx.bot
@@ -30,27 +25,6 @@ class View(discord.ui.View):
             return False
         return True
 
-    async def on_timeout(self) -> None:
-        if hasattr(self, "message"):
-            for b in self.children:
-                if isinstance(b, discord.ui.Button) and not b.style == discord.ButtonStyle.link:
-                    b.style, b.disabled = discord.ButtonStyle.grey, True
-
-                elif isinstance(b, discord.ui.Select):
-                    b.disabled = True
-
-            with suppress(discord.HTTPException):
-                await self.message.edit(view=self)
-                return
-
     async def on_error(self, interaction: discord.Interaction, error: Exception, item) -> None:
         print("View Error:", error)
         self.ctx.bot.dispatch("command_error", self.ctx, error)
-
-class Input(discord.ui.Modal):
-    def __init__(self, title: str):
-        super().__init__(title=title)
-
-    async def on_submit(self, interaction: discord.Interaction) -> None:
-        with suppress(discord.NotFound):
-            await interaction.response.defer()

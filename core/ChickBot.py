@@ -18,6 +18,7 @@ frmt = logging.Formatter('[{asctime}] [{levelname:<7}] {name}: {message}', "%Y-%
 hdlr.setFormatter(frmt)
 Logger.addFilter(hdlr)
 
+__all__ = ("Chick", "Logger")
 
 class ChickBot(commands.Bot):
     def __init__(self, **kwargs):
@@ -30,7 +31,7 @@ class ChickBot(commands.Bot):
                 name="development"),
             **kwargs
             )
-
+        
     @property
     def Logger(self):
         return Logger
@@ -63,16 +64,7 @@ class ChickBot(commands.Bot):
 
     async def setup_hook(self):
         self.session = aiohttp.ClientSession()
-        sc = spotify.SpotifyClient(
-            client_id=self.config.SPOTIFY_CLIENT_ID,
-            client_secret=self.config.SPOTIFY_CLIENT_SECRET,
-        )
-        node: wavelink.Node = wavelink.Node(uri='hatkidllus.gremagol.xyz:2334', password='easypass')
-        await wavelink.NodePool.connect(client=self, nodes=[node], spotify=sc)
 
-
-    async def on_wavelink_node_ready(self, node: wavelink.Node):
-        self.Logger.info(f"Successfully connected to {node.uri}")
 
     async def on_command_error(self, ctx, error) -> None:
         if isinstance(error, commands.CommandOnCooldown):
@@ -89,7 +81,6 @@ class ChickBot(commands.Bot):
         elif isinstance(error, commands.CheckFailure):
             await ctx.send("You do not have permission to use this command.")
         else:
-            # Print the error to the console for debugging purposes
             print(f"An error occurred: {type(error).__name__} - {error}")
             await ctx.send("An error occurred while executing the command.")
 
@@ -105,7 +96,5 @@ class ChickBot(commands.Bot):
             await message.channel.send(embed=embed, view=LinkButton(links))
         else:
             await self.process_commands(message)
-
-
 
 Chick = ChickBot()
