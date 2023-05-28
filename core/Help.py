@@ -5,7 +5,7 @@ import config
 from discord.ext import commands
 from difflib import get_close_matches
 from typing import List, Mapping
-from .Butons import LinkButton, LinkType
+from .View import LinkButton, LinkType
 
 def truncate_string(value, max_length=128, suffix="..."):
     string_value = str(value)
@@ -43,7 +43,7 @@ class HelpCommand(commands.HelpCommand):
 
         slash_cmds = await ctx.bot.tree.fetch_commands(guild=ctx.guild)
         slash_cmds = [f"{i.mention}" for i in slash_cmds]
-        embed.add_field(name=f"{ctx.bot.user.name} Slash Commands", value=", ".join(slash_cmds))
+        embed.add_field(name=f"{ctx.bot.user.name} Slash Commands", value=", ".join(slash_cmds), inline=False)
 
         links = [
             LinkType("Support", config.SERVER_LINK),
@@ -66,7 +66,7 @@ class HelpCommand(commands.HelpCommand):
 
         embed.description = f"> {_help}\n\n**Subcommands**\n{_cmds}"
 
-        embed.set_footer(text=f'Use "{prefix}help <command>" for more information.')
+        # embed.set_footer(text=f'<> is required \n [] is optional \nUse "{prefix}help <command>" for more information.')
 
         if group.aliases:
             embed.add_field(
@@ -86,7 +86,7 @@ class HelpCommand(commands.HelpCommand):
         if examples:
             examples: str = "\n".join(examples)  # type: ignore
             embed.add_field(name="Examples", value=f"```{examples}```")
-
+        
         await self.context.send(embed=embed)
 
 
@@ -116,6 +116,7 @@ class HelpCommand(commands.HelpCommand):
         _text += f"```{examples}```"
 
         embed.description = _text
+        embed.set_footer(text=f'<> is required \n [] is optional \nUse "c.help <command>" for more information.')
 
         await self.context.send(embed=embed)
 

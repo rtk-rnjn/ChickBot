@@ -2,14 +2,15 @@ import asyncio
 import logging
 import sys
 import traceback
-
+import time
 import aiohttp
 import discord
 import wavelink
-from discord.ext import commands
+import random
+from discord.ext import commands, tasks
 from wavelink.ext import spotify
 
-from .Butons import LinkButton, LinkType
+from .View import LinkButton, LinkType
 from .Help import HelpCommand
 
 Logger = logging.getLogger("discord.client")
@@ -26,9 +27,7 @@ class ChickBot(commands.Bot):
             command_prefix=commands.when_mentioned_or(self.config.PREFIX),
             help_command=HelpCommand(),
             intents=discord.Intents.all(), 
-            activity=discord.Activity(
-                type=discord.ActivityType.competing, 
-                name="development"),
+            case_insensitive=True,
             **kwargs
             )
         
@@ -61,6 +60,24 @@ class ChickBot(commands.Bot):
         synced = await self.tree.sync()
         self.Logger.info(f"{len(synced)} Slash commands have been globally synchronized.")
         self.Logger.info(f'Logged in as {self.user}')
+        self.status_task.start()
+        
+
+    @property
+    def started(self):
+        starttime=time.time()
+        return starttime
+
+    @tasks.loop(minutes=0.3)
+    async def status_task(self) -> None:
+        """
+        Setup the game status task of the bot.
+        """
+        guilds=len(self.guilds)
+        user=len(self.users)
+        statuses=self.config.STATUSES
+        statuses=[status.replace("_guilds_", str(guilds)).replace("_user_", str(user)) for status in statuses]
+        await self.change_presence(activity=discord.Game(random.choice(statuses)))
 
     async def setup_hook(self):
         self.session = aiohttp.ClientSession()
@@ -86,7 +103,7 @@ class ChickBot(commands.Bot):
 
     async def on_message(self, message):
         if self.user.mention in message.content:
-            embed = discord.Embed(title="Chick | a discord bot", description=f"Hi {message.author.mention}!\nMy prefix is `{self.config.PREFIX}`.\nUse `{self.config.PREFIX}help` to get started. \n`All commands are available as slash (/)`", color=self.color)
+            embed = discord.Embed(title="Chick | a discord bot for your server", description=f"Hi {message.author.mention}!\nMy prefix is `{self.config.PREFIX}`\nUse `{self.config.PREFIX}help` to get started. \nI provide some nice features such as modaration, music, utility, fun and more\n`All commands are available as slash (/)`", color=self.color)
             embed.set_thumbnail(url=self.user.display_avatar.url)
             embed.set_footer(text=self.config.FOOTER, icon_url=self.user.display_avatar.url)
             links = [

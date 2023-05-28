@@ -1,3 +1,5 @@
+
+
 EXTENSIONS = [
     "cogs.misc",
     "cogs.utility",
@@ -5,19 +7,22 @@ EXTENSIONS = [
     "cogs.info",
     "cogs.automod",
     "cogs.modaration",
-    "cogs.welcome"
+    "cogs.welcome",
+    "cogs.music"
     ]
 
-YOUTUBE=' '
+YOUTUBE="   "
 
-SPOTIFY_CLIENT_ID=' '
-SPOTIFY_CLIENT_SECRET=' '
+SPOTIFY_CLIENT_ID='   '
+SPOTIFY_CLIENT_SECRET='   '
 
-OPENAI_TOKEN = "add your token here"
+OPENAI_TOKEN = "   "
 
-DISCORD_TOKEN = "add your token here"
+DISCORD_TOKEN = "   "
 
 COLOR = 0x2f3136
+
+STATUSES = ["/chick", "c.help", "/play", f"guilds _guilds_ with _users_ user", "@Chick"]
 
 FOOTER = "Chick OP"
 
@@ -26,3 +31,8 @@ PREFIX = "c."
 SERVER_LINK = "https://discord.gg/jnwxpcFhrA"
 
 BOT_INVITE = "https://discord.com/api/oauth2/authorize?client_id=1073278821496782858&permissions=10430261488759&scope=applications.commands%20bot"
+
+LAVALINK_HOST = "  "
+LAVALINK_PORT = int("port")
+LAVALINK_AUTH = "password"
+node_uri = f"{LAVALINK_HOST}:{LAVALINK_PORT}"

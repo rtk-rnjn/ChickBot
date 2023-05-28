@@ -4,7 +4,9 @@ import re
 import discord
 import lavalink
 import requests
+from typing import Optional
 from discord.ext import commands
+from discord import app_commands
 from lavalink.filters import LowPass
 
 import config
@@ -147,12 +149,18 @@ class Music(commands.Cog):
         await ctx.send('Connected.', delete_after=10)
 
     @commands.hybrid_command()
-    async def play(self, ctx, query: str):
-        """ Searches and plays a song from a given query. """
+    @app_commands.describe(
+        song="Song/playlist name or url, Provide artist for better result", 
+        artist="Artist name for better result")
+    async def play(self, ctx, song: str,*, artist:Optional[str]=None):
+        """Searches and plays a song from a given query. provide artist for better result"""
         if not ctx.voice_client:
             await ctx.invoke(self.bot.get_command(self.music.join))
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
-        query = query.strip('<>')
+        if artist is None:
+            query = song.strip('<>')
+        else:
+            query = artist.strip('[]') + ' ' + song.strip('<>')
         if not url_rx.match(query):
             query = f'spsearch:{query}'
         results = await player.node.get_tracks(query)

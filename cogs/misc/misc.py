@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from typing_extensions import Annotated
 
-from core import Chick, Cog
+from core import Chick, Cog, LinkButton, LinkType
 
 from .utils import askgpt, get_chick_fact, translate
 
