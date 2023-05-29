@@ -1,17 +1,14 @@
 import asyncio
 import logging
-import sys
-import traceback
+import random
 import time
+
 import aiohttp
 import discord
-import wavelink
-import random
 from discord.ext import commands, tasks
-from wavelink.ext import spotify
 
-from .View import LinkButton, LinkType
 from .Help import HelpCommand
+from .View import LinkButton, LinkType
 
 Logger = logging.getLogger("discord.client")
 hdlr = logging.StreamHandler()
