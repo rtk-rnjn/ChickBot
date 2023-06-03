@@ -6,6 +6,5 @@ def get_chick_fact():
     url = f"https://chickenfacts.io/api/v1/facts/{id}.json"
     response = requests.get(url)
     json = response.json()
-    fact = json["fact"]
-    return fact
+    return json["fact"]
 

@@ -12,8 +12,8 @@ class Developer(Cog):
     async def reload(self, ctx, *, cog: str):
         """Reloads a cog"""
         try:
-            await self.bot.unload_extension("cogs."+cog)
-            await self.bot.load_extension("cogs."+cog)
+            await self.bot.unload_extension(f"cogs.{cog}")
+            await self.bot.load_extension(f"cogs.{cog}")
         except Exception as e:
             await ctx.send(f'Failed to reload cog `{cog}`: `{e.__class__.__name__}`: `{e}`')
         else:
@@ -24,7 +24,7 @@ class Developer(Cog):
     async def load(self, ctx, *, cog: str):
         """Loads a cog"""
         try:
-            await self.bot.load_extension("cogs."+cog)
+            await self.bot.load_extension(f"cogs.{cog}")
         except Exception as e:
             await ctx.send(f'Failed to reload cog `{cog}`: `{e.__class__.__name__}`: `{e}`')
         else:

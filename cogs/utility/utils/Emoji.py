@@ -76,6 +76,5 @@ class EmojiURL:
                 return cls(animated=url.path.endswith('.gif'), url=argument)
             except Exception:
                 raise commands.BadArgument('Not a valid or supported emoji URL.') from None
-                await ctx.send('Not a valid or supported emoji URL.')
         else:
             return cls(animated=partial.animated, url=str(partial.url))

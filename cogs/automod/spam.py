@@ -13,13 +13,11 @@ class AntiSpam(Cog):
     async def on_message(self, message):
         if type(message.channel) is not discord.TextChannel or message.author.bot: return
         bucket = self.anti_spam.get_bucket(message)
-        retry_after = bucket.update_rate_limit()
-        if retry_after:
+        if retry_after := bucket.update_rate_limit():
             await message.delete()
             await message.channel.send(f"{message.author.mention}, Please don't spam!", delete_after = 10)
             violations = self.too_many_violations.get_bucket(message)
-            check = violations.update_rate_limit()
-            if check:
+            if check := violations.update_rate_limit():
                 try: 
                     await message.author.timeout(timedelta(minutes = 3), reason = "Spamming")
                     await message.author.send(f"You have been muted for spamming! at {message.guild.name}")

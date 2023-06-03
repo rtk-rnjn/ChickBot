@@ -12,7 +12,5 @@ class Welcome(Cog):
             channel = self.bot.get_channel(1108718525343871099)
             embed=discord.Embed(title="Welcome to Chick Dev", description=f"hey, {member.mention}!\nPlease read the rules\nin <#1109493306657874030> and \nenjoy your stay!", color=self.bot.color)
             embed.set_thumbnail(url=member.display_avatar.url)
-            embed.set_footer(text=f"Chick OP", icon_url=self.bot.user.display_avatar.url)
+            embed.set_footer(text="Chick OP", icon_url=self.bot.user.display_avatar.url)
             await channel.send(embed=embed)
-        else: 
-            pass

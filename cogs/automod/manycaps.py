@@ -10,13 +10,11 @@ class TooManyCaps(Cog):
 
     @Cog.listener()
     async def on_message(self, message):
-        max_cap_percentage = 0.5
         caps_count = sum(1 for c in message.content if c.isupper())
-        message_length = len(message.content)
-        if caps_count==0:
-            pass
-        else:
+        if caps_count != 0:
+            message_length = len(message.content)
             cap_percentage = caps_count / message_length
+            max_cap_percentage = 0.5
             if cap_percentage > max_cap_percentage:
                 warning_message = f"{message.author.mention}, Please avoid excessive use of capital letters."
                 await message.delete()

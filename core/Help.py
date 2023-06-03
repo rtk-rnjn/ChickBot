@@ -92,7 +92,7 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_command_help(self, cmd: commands.Command):
         embed = discord.Embed(color=self.color)
-        embed.title = "Command: " + cmd.qualified_name
+        embed.title = f"Command: {cmd.qualified_name}"
 
         examples = []
 

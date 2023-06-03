@@ -22,7 +22,13 @@ DISCORD_TOKEN = "   "
 
 COLOR = 0x2f3136
 
-STATUSES = ["/chick", "c.help", "/play", f"guilds _guilds_ with _users_ user", "@Chick"]
+STATUSES = [
+    "/chick",
+    "c.help",
+    "/play",
+    "guilds _guilds_ with _users_ user",
+    "@Chick",
+]
 
 FOOTER = "Chick OP"
 

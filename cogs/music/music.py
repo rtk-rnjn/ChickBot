@@ -22,9 +22,7 @@ class VoiceClient(discord.VoiceClient):
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self.client = client
         self.channel = channel
-        if hasattr(self.client, 'lavalink'):
-            self.lavalink = self.client.lavalink
-        else:
+        if not hasattr(self.client, 'lavalink'):
             self.client.lavalink = lavalink.Client(client.user.id)
             self.client.lavalink.add_node(
                 config.LAVALINK_HOST,
@@ -33,7 +31,7 @@ class VoiceClient(discord.VoiceClient):
                 'us',
                 'music-node'
             )
-            self.lavalink = self.client.lavalink
+        self.lavalink = self.client.lavalink
 
     async def on_voice_server_update(self, data):
         lavalink_data = {
@@ -103,40 +101,33 @@ class Music(commands.Cog):
 
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.CommandInvokeError('Join a voicechannel first.')
-            await ctx.send('Join a voicechannel first.', delete_after=10)
+        if v_client := ctx.voice_client:
+            if v_client.channel.id != ctx.author.voice.channel.id:
+                raise commands.CommandInvokeError('You need to be in my voicechannel.')
 
-        v_client = ctx.voice_client
-        if not v_client:
+        else:
             if not should_connect:
                 raise commands.CommandInvokeError('Not connected.')
-                await ctx.send('Not connected.', delete_after=10)
-
             permissions = ctx.author.voice.channel.permissions_for(ctx.me)
 
             if not permissions.connect or not permissions.speak:
                 raise commands.CommandInvokeError('I need the `CONNECT` and `SPEAK` permissions.')
-                await ctx.send('I need the `CONNECT` and `SPEAK` permissions.')
-
             player.store('channel', ctx.channel.id)
             await ctx.author.voice.channel.connect(cls=VoiceClient)
-        else:
-            if v_client.channel.id != ctx.author.voice.channel.id:
-                raise commands.CommandInvokeError('You need to be in my voicechannel.')
-                await ctx.send('You need to be in my voicechannel.', delete_after=10)
 
     async def track_hook(self, event):
         if isinstance(event, lavalink.events.TrackStartEvent):
             c = event.player.fetch('channel')
             if c:
                 c = self.bot.get_channel(c)
-                if c:
-                    requester = await self.bot.fetch_user(event.track.requester)
-                    embed = discord.Embed(colour=self.bot.color, title='Now Playing', color=self.bot.color)
-                    embed.add_field(name='Song', value=f'[{event.track.title}]({event.track.uri})')
-                    embed.add_field(name='Duration', value=str(lavalink.utils.format_time(event.track.duration)))
-                    embed.set_footer(text=f'Requested by {requester.name}', icon_url=requester.display_avatar.url)
-                    embed.set_thumbnail(url=f"{thumbnail(event.track.identifier)}")
-                    await c.send(embed=embed, delete_after=event.track.duration/1000-5)
+            if c:
+                requester = await self.bot.fetch_user(event.track.requester)
+                embed = discord.Embed(colour=self.bot.color, title='Now Playing', color=self.bot.color)
+                embed.add_field(name='Song', value=f'[{event.track.title}]({event.track.uri})')
+                embed.add_field(name='Duration', value=str(lavalink.utils.format_time(event.track.duration)))
+                embed.set_footer(text=f'Requested by {requester.name}', icon_url=requester.display_avatar.url)
+                embed.set_thumbnail(url=f"{thumbnail(event.track.identifier)}")
+                await c.send(embed=embed, delete_after=event.track.duration/1000-5)
         elif isinstance(event, lavalink.events.QueueEndEvent):
             guild_id = event.player.guild_id
             guild = self.bot.get_guild(guild_id)
@@ -178,7 +169,7 @@ class Music(commands.Cog):
             embed.description = f'{results.playlist_info.name} - {len(tracks)} tracks'
         else:
             track = results.tracks[0]
-            embed.title = f'Added to queue.'
+            embed.title = 'Added to queue.'
             embed.description = f'Song : [{track.title}]({track.uri}) by {track.author}'
             embed.set_footer(text=f"Requested by {ctx.author.name}", icon_url=ctx.author.display_avatar.url)
             player.add(requester=ctx.author.id, track=track)
@@ -206,9 +197,8 @@ class Music(commands.Cog):
             return await ctx.send('Not playing.', delete_after=10)
         if not player.paused:
             return await ctx.send('Not paused.', delete_after=10)
-        else:
-            await player.set_pause(False)
-            await ctx.send('⏯ | Resumed.', delete_after=10)
+        await player.set_pause(False)
+        await ctx.send('⏯ | Resumed.', delete_after=10)
 
     @commands.hybrid_command()
     async def skip(self, ctx):
@@ -261,10 +251,10 @@ class Music(commands.Cog):
         pages = math.ceil(len(player.queue) / items_per_page)
         start = (page - 1) * items_per_page
         end = start + items_per_page
-        queue_list = ''
-        for i, track in enumerate(player.queue[start:end], start=start):
-            queue_list += f'`{i + 1}.` [**{track.title}**]({track.uri})\n'
-
+        queue_list = ''.join(
+            f'`{i + 1}.` [**{track.title}**]({track.uri})\n'
+            for i, track in enumerate(player.queue[start:end], start=start)
+        )
         embed = discord.Embed(colour=self.bot.color, description=f'**{len(player.queue)} tracks**\n\n{queue_list}')
         embed.set_footer(text=f'Viewing page {page}/{pages}, do {ctx.prefix}queue <page> to view a different page.')
         await ctx.send(embed=embed)

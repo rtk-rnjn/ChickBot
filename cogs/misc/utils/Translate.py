@@ -162,7 +162,7 @@ async def translate(text: str, *, src: str = 'auto', dest: str = 'en', session: 
         src = data.get('src', 'Unknown')
         source_language = LANGUAGES.get(src, src)
         sentences: list[TranslatedSentence] = data.get('sentences', [])
-        if len(sentences) == 0:
+        if not sentences:
             raise RuntimeError('Google translate returned no information')
 
         original = ''.join(sentence.get('orig', '') for sentence in sentences)

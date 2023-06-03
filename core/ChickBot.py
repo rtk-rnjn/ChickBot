@@ -62,8 +62,7 @@ class ChickBot(commands.Bot):
 
     @property
     def started(self):
-        starttime=time.time()
-        return starttime
+        return time.time()
 
     @tasks.loop(minutes=0.3)
     async def status_task(self) -> None:
