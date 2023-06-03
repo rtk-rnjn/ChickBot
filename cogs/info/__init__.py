@@ -1,4 +1,9 @@
-from .Info import Info
+from __future__ import annotations
 
-async def setup(bot):
-    await bot.add_cog(Info(bot))
+from core import ChickBot
+
+from .info import Info
+
+
+async def setup(bot: ChickBot) -> None:
+    await bot.add_cog(info(bot))

@@ -1,7 +1,11 @@
-import requests
-import json
+from __future__ import annotations
 
-def thumbnail(identifier):
-    r = requests.get(f"https://embed.spotify.com/oembed/?url=spotify:track:{identifier}")
-    
-    return r.json()["thumbnail_url"]
+import aiohttp
+
+
+async def thumbnail(identifier: str) -> str:
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+            f"https://embed.spotify.com/oembed/?url=spotify:track:{identifier}"
+        ) as r:
+            return (await r.json())["thumbnail_url"]

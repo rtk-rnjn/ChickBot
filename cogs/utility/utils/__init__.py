@@ -1,2 +1,1 @@
-
-from .Emoji import *
+from .emoji import *

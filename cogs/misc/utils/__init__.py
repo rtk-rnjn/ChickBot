@@ -1,3 +1,3 @@
-from .Translate import translate
-from .ChatGPT import askgpt
-from .ChickFact import get_chick_fact
+from .chat_gpt import askgpt
+from .fact import get_chick_fact
+from .translate import translate
