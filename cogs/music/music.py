@@ -10,7 +10,7 @@ from discord import app_commands
 from discord.ext import commands
 from lavalink.filters import LowPass
 
-from core import ChickBot, View
+from core import ChickBot, view
 
 from .spotify import thumbnail
 
