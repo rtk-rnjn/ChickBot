@@ -1,6 +1,7 @@
 import sqlite3
 
-class DB():
+
+class DB:
     def __init__(self):
         self.db = "./database/data.sqlite"
         self.conn = sqlite3.connect(self.db)
@@ -12,5 +13,4 @@ class DB():
         )
         self.conn.commit()
 
-    #mai bana rha hu , abhi tak ye koi kam ka nhi ha
-    
+    # mai bana rha hu , abhi tak ye koi kam ka nhi ha

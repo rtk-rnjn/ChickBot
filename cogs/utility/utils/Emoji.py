@@ -1,25 +1,27 @@
 from __future__ import annotations
-from typing_extensions import Annotated
 
-from discord.ext import commands
-from discord import app_commands
+import asyncio
+import io
+import re
 from typing import TYPE_CHECKING, Optional
 
 import discord
-import asyncio
 import yarl
-import re
-import io
+from discord import app_commands
+from discord.ext import commands
+from typing_extensions import Annotated
 
-
+from core import ChickBot
 
 BLOB_GUILD_ID = 1064154848477589584
-EMOJI_REGEX = re.compile(r'<a?:.+?:([0-9]{15,21})>')
-EMOJI_NAME_REGEX = re.compile(r'^[0-9a-zA-Z\_]{2,32}$')
+EMOJI_REGEX = re.compile(r"<a?:.+?:([0-9]{15,21})>")
+EMOJI_NAME_REGEX = re.compile(r"^[0-9a-zA-Z\_]{2,32}$")
 
 
 class BlobEmoji(commands.Converter):
-    async def convert(self, ctx, argument: str) -> discord.Emoji:
+    async def convert(
+        self, ctx: commands.Context[ChickBot], argument: str
+    ) -> discord.Emoji:
         guild = ctx.bot.get_guild(BLOB_GUILD_ID)
         assert guild is not None
 
@@ -34,7 +36,7 @@ class BlobEmoji(commands.Converter):
             emoji = discord.utils.find(lambda e: e.name == argument, emojis.values())
 
         if emoji is None:
-            raise commands.BadArgument('Not a valid blob emoji.')
+            raise commands.BadArgument("Not a valid blob emoji.")
         return emoji
 
 
@@ -52,7 +54,7 @@ def partial_emoji(argument: str, *, regex=EMOJI_REGEX) -> int:
 def emoji_name(argument: str, *, regex=EMOJI_NAME_REGEX) -> str:
     m = regex.match(argument)
     if m is None:
-        raise commands.BadArgument('Invalid emoji name.')
+        raise commands.BadArgument("Invalid emoji name.")
     return argument
 
 
@@ -62,20 +64,21 @@ class EmojiURL:
         self.animated: bool = animated
 
     @classmethod
-    async def convert(cls, ctx, argument: str) -> EmojiURL:
+    async def convert(cls, ctx: commands.Context[ChickBot], argument: str) -> EmojiURL:
         try:
             partial = await commands.PartialEmojiConverter().convert(ctx, argument)
-        except commands.BadArgument:
+        except commands.BadArgument as e:
             try:
                 url = yarl.URL(argument)
-                if url.scheme not in ('http', 'https'):
-                    raise RuntimeError
+                if url.scheme not in ("http", "https"):
+                    raise RuntimeError from e
                 path = url.path.lower()
-                if not path.endswith(('.png', '.jpeg', '.jpg', '.gif')):
-                    raise RuntimeError
-                return cls(animated=url.path.endswith('.gif'), url=argument)
+                if not path.endswith((".png", ".jpeg", ".jpg", ".gif")):
+                    raise RuntimeError from e
+                return cls(animated=url.path.endswith(".gif"), url=argument)
             except Exception:
-                raise commands.BadArgument('Not a valid or supported emoji URL.') from None
-                await ctx.send('Not a valid or supported emoji URL.')
+                raise commands.BadArgument(
+                    "Not a valid or supported emoji URL."
+                ) from None
         else:
             return cls(animated=partial.animated, url=str(partial.url))

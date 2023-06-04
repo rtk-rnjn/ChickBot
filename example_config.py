@@ -1,5 +1,3 @@
-
-
 EXTENSIONS = [
     "cogs.misc",
     "cogs.utility",
@@ -8,19 +6,19 @@ EXTENSIONS = [
     "cogs.automod",
     "cogs.modaration",
     "cogs.welcome",
-    "cogs.music"
-    ]
+    "cogs.music",
+]
 
-YOUTUBE="   "
+YOUTUBE = "   "
 
-SPOTIFY_CLIENT_ID='   '
-SPOTIFY_CLIENT_SECRET='   '
+SPOTIFY_CLIENT_ID = "   "
+SPOTIFY_CLIENT_SECRET = "   "
 
 OPENAI_TOKEN = "   "
 
 DISCORD_TOKEN = "   "
 
-COLOR = 0x2f3136
+COLOR = 0x2F3136
 
 STATUSES = ["/chick", "c.help", "/play", f"guilds _guilds_ with _users_ user", "@Chick"]
 

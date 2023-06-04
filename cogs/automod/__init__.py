@@ -1,6 +1,11 @@
-from .spam import AntiSpam
-from .manycaps import TooManyCaps
+from __future__ import annotations
 
-async def setup(bot):
+from core import ChickBot
+
+from .manycaps import TooManyCaps
+from .spam import AntiSpam
+
+
+async def setup(bot: ChickBot) -> None:
     await bot.add_cog(TooManyCaps(bot))
     await bot.add_cog(AntiSpam(bot))

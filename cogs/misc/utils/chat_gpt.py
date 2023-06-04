@@ -1,8 +1,10 @@
-import json, os, sys
-import openai as ai
+from __future__ import annotations
+
 import config
+import openai as ai
 
 ai.api_key = config.OPENAI_TOKEN
+
 
 def askgpt(user_text):
     """
@@ -11,10 +13,7 @@ def askgpt(user_text):
     :type print_output: boolean whether or not to print the raw output JSON
     """
     completions = ai.Completion.create(
-        engine='text-davinci-003', 
-        temperature=0.777,   
-        prompt=user_text,         
-        max_tokens=1024            
+        engine="text-davinci-003", temperature=0.777, prompt=user_text, max_tokens=1024
     )
-		
+
     return completions["choices"][0]["text"]
