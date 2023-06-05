@@ -9,18 +9,18 @@ EXTENSIONS = [
     "cogs.music",
 ]
 
-YOUTUBE = "   "
+YOUTUBE = ""
 
-SPOTIFY_CLIENT_ID = "   "
-SPOTIFY_CLIENT_SECRET = "   "
+SPOTIFY_CLIENT_ID = ""
+SPOTIFY_CLIENT_SECRET = ""
 
-OPENAI_TOKEN = "   "
+OPENAI_TOKEN = ""
 
-DISCORD_TOKEN = "   "
+DISCORD_TOKEN = ""
 
 COLOR = 0x2F3136
 
-STATUSES = ["/chick", "c.help", "/play", f"guilds _guilds_ with _users_ user", "@Chick"]
+STATUSES = ["/chick", "c.help", "/play", "guilds _guilds_ with _users_ user", "@Chick"]
 
 FOOTER = "Chick OP"
 
